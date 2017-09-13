@@ -65,7 +65,11 @@ a:not(.navbar-item-link):hover {
 }
 
 .current-navbar-item {
-	background-color: #00BB33;
+	background: linear-gradient(to bottom right, #00CC33, #00CCCCCC);
+}
+
+.current-navbar-item:hover {
+	background: linear-gradient(to bottom right, #00FF33, #00EEEEEE);
 }
 
 .navbar-item:not(.current-navbar-item):hover {
