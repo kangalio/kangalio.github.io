@@ -1,0 +1,22 @@
+<html>
+  <header>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="index.js"></script>
+  </header>
+  <body>
+		<input type="range" min="1" max="286" value="286" oninput="this.nextElementSibling.innerHTML = this.value" onchange="update_length_filter(this.value)"/>
+    Show only sequences with max length <span>286</span>
+    <table class="pure-table pure-table-striped" style="word-wrap: break-word">
+      <thead>
+        <tr>
+          <th>Approximated snap</th>
+          <th>Spacing sequence, in 192nds</th>
+          <th>BPM required to achieve equivalent NPS to 200 BPM 16ths stream</th>
+        </tr>
+      </thead>
+      <tbody id="approximations-tbody"></tbody>
+    </table>
+    <script>refill_table()</script>
+  </body>
+</html>
