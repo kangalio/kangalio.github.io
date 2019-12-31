@@ -1,6 +1,8 @@
 <html>
   <header>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
     <link rel="stylesheet" href="index.css">
     <script src="index.js"></script>
@@ -8,13 +10,11 @@
   <body>
     <div id="explanation">
       <h1>Stepmania Snap Calculator</h1>
-      <p>
       This document tells you how to approximate all possible snaps using
-      just 192nds. The hyphen-separated numbers are the spacings in-between
+      just 192nds. The hyphen-separated numbers are the spacings in between
       notes, expressed in 192nds.
-      </p>
-      <p>
-      <span style="font-weight: bold">Example:</span>
+      
+      <span class="small-header">Example:</span>
       "36 ... 6-5-5" To approximate 36ths, put the following spacing between the notes:
       <ul>
         <li>six 192nds between first and second note</li>
@@ -23,41 +23,56 @@
         <li>then, again, six 192nds between fourth and fifth</li>
         <li>(and so on)</li>
       </ul>
-      </p>
-    </div>
-    
-    <div id="settings-box">
-      <div class="setting">
-        Show only sequences with max length <span class="slider-value">286</span>:
-        <input class="setting" id="max-length"
-               type="range" min="1" max="286" value="286"
-               oninput="this.previousElementSibling.innerHTML = this.value"/>
+      
+      <span class="small-header">Configure entries:</span>
+      <div id="settings">
+        <div>
+          Show only sequences with max length <span class="slider-value"></span>:
+          <input id="max-length" class="setting"
+                 type="range" min=1 max=300 value=300
+                 oninput="this.previousElementSibling.innerHTML = this.value"
+                 onchange="refill_table()"/>
+        </div>
+        <form onsubmit="append_snap(); return false;">
+          Append custom snap:
+          <input class="setting" id="snap-input"
+                 type="number" step="any"
+                 style="width: 5em; max-height: 2em;"
+                 title="Press enter to append"/>
+        </form>
+      </div>
+      
+      <span class="small-header">Credit:</span>
+      <div>
+        This was made by kangalioo. Thanks to leo137 for the original
+        idea of a snap calculator.
       </div>
     </div>
     
-    <div><table class="pure-table pure-table-striped" style="word-wrap: break-word">
-      <thead>
-        <tr>
-          <th>Approximated snap</th>
-          <th>Spacing sequence, in 192nds</th>
-          <th>
-            16ths stream BPM equivalent with base BPM 
-            <input class="setting" id="target-bpm"
-                   type="number" width=5px min=20 max=999 value=200
-                   onchange="refill_table()"/>
-            </th>
-        </tr>
-      </thead>
-      <tbody id="approximations-tbody"></tbody>
-    </table></div>
+    
+    <div id="table">
+      <table class="pure-table pure-table-striped" align=center>
+        <thead>
+          <tr>
+            <th>Approximated snap</th>
+            <th>Spacing sequence, in 192nds</th>
+            <th>
+              16ths stream BPM equivalent with base BPM 
+              <input id="target-bpm"
+                     type="number" min=20 max=999 value=200
+                     onchange="refill_table()"/>
+              </th>
+          </tr>
+        </thead>
+        <tbody id="approximations-tbody">
+          <!-- will be filled by JS -->
+        </tbody>
+      </table>
+    </div>
     
     <script>
+      setup();
       refill_table();
-      
-      var setting_elems = document.getElementsByClassName("setting");
-      for (var i = 0; i < setting_elems.length; i++) {
-        setting_elems[i].onchange = refill_table;
-      }
     </script>
   </body>
 </html>

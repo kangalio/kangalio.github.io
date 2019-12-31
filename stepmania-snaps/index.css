@@ -1,9 +1,9 @@
 body {
   padding: 15px;
   
+  font-family: Lato, Helvetica Neue, Helvetica, sans-serif;
   font-size: 17px;
   line-height: 1.5;
-  font-family: Lato, Helvetica Neue, Helvetica, sans-serif;
 }
 
 body > div {
@@ -17,24 +17,17 @@ h1 {
   text-align: center;
 }
 
+ul {
+  margin-top: 0;
+}
+
 #explanation {
-/*
-  width: 40vw;
-*/
   margin: auto;
   max-width: 750px;
   text-align: left;
   padding: 10px;
   background-color: #f4f4f4;
   border: 2px solid #cbcbcb;
-}
-
-#explanation > * {
-  margin-bottom: 0.7em;
-}
-
-ul {
-  list-style-position: inside;
 }
 
 p:first-of-type {
@@ -45,16 +38,33 @@ p:first-of-type {
   font-weight: bold;
 }
 
+.small-header {
+  display: block;
+  margin-top: 0.7em;
+  margin-bottom: 0.4em;
+  font-weight: bold;
+}
+
+td, th {
+  vertical-align: bottom;
+  vertical-align: middle;
+}
+
+.delete-button {
+  display: inline-block;
+  margin-left: 10px;
+  float: right;
+  height: 1.5em;
+}
+
 #target-bpm {
   width: 4em;
 }
 
-#settings-box {
-  padding: 10px;
-  border: 2px solid #cbcbcb;
+.setting {
+  vertical-align: middle;
 }
 
-.setting {  
-  display: inline-block;
-  vertical-align: middle;
+.hidden {
+  display: none;
 }
