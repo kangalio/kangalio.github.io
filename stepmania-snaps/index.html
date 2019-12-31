@@ -1,22 +1,63 @@
 <html>
   <header>
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
+    <link rel="stylesheet" href="index.css">
     <script src="index.js"></script>
   </header>
   <body>
-		<input type="range" min="1" max="286" value="286" oninput="this.nextElementSibling.innerHTML = this.value" onchange="update_length_filter(this.value)"/>
-    Show only sequences with max length <span>286</span>
-    <table class="pure-table pure-table-striped" style="word-wrap: break-word">
+    <div id="explanation">
+      <h1>Stepmania Snap Calculator</h1>
+      <p>
+      This document tells you how to approximate all possible snaps using
+      just 192nds. The hyphen-separated numbers are the spacings in-between
+      notes, expressed in 192nds.
+      </p>
+      <p>
+      <span style="font-weight: bold">Example:</span>
+      "36 ... 6-5-5" To approximate 36ths, put the following spacing between the notes:
+      <ul>
+        <li>six 192nds between first and second note</li>
+        <li>five 192nds between second and third note</li>
+        <li>five 192nds between third and fourth note</li>
+        <li>then, again, six 192nds between fourth and fifth</li>
+        <li>(and so on)</li>
+      </ul>
+      </p>
+    </div>
+    
+    <div id="settings-box">
+      <div class="setting">
+        Show only sequences with max length <span class="slider-value">286</span>:
+        <input class="setting" id="max-length"
+               type="range" min="1" max="286" value="286"
+               oninput="this.previousElementSibling.innerHTML = this.value"/>
+      </div>
+    </div>
+    
+    <div><table class="pure-table pure-table-striped" style="word-wrap: break-word">
       <thead>
         <tr>
           <th>Approximated snap</th>
           <th>Spacing sequence, in 192nds</th>
-          <th>BPM required to achieve equivalent NPS to 200 BPM 16ths stream</th>
+          <th>
+            16ths stream BPM equivalent with base BPM 
+            <input class="setting" id="target-bpm"
+                   type="number" width=5px min=20 max=999 value=200
+                   onchange="refill_table()"/>
+            </th>
         </tr>
       </thead>
       <tbody id="approximations-tbody"></tbody>
-    </table>
-    <script>refill_table()</script>
+    </table></div>
+    
+    <script>
+      refill_table();
+      
+      var setting_elems = document.getElementsByClassName("setting");
+      for (var i = 0; i < setting_elems.length; i++) {
+        setting_elems[i].onchange = refill_table;
+      }
+    </script>
   </body>
 </html>
