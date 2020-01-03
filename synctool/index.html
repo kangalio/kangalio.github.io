@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>index.html</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="what-is-this">What is this</h1>
+<p>My (kangalioo) sync tool helps you sync charts to songs. It aims to be especially useful for songs with freaky BPMs that are tricky to model manually, such as live music. The core idea behind the tool is not to <em>guess</em> the BPM and offset of an audio file (that’s difficult and unreliable). Instead, <strong>it aims to precisely calculate BPM changes using explicit labels on that audio file.</strong></p>
+<p>Therefore the catch is that you won’t be able to use this for songs without clear beat boundaries (i.e. drum hits). That means that this is primarily meant for EDM; things like Acapella or Orchestra music which have vague beat - not so much.</p>
+<p>This tool leverages the Audacity label functionality. Load your audio file into Audacity and go wild creating labels using the Ctrl+B shortcut (you’ll learn about the types of markers below). When you’re done, export the labels via <code>File -&gt; Export -&gt; Export Labels</code>. Drag the resulting .txt file onto my tool’s exe file (<a href="https://github.com/kangalioo/synctool/releases">download</a>), and it will create a <code>sync-values-output.txt</code> file looking similar to this:</p>
+<pre><code>#BPMS:0.000000=171.288809
+,222.000000=171.177361
+,241.989583=137.000000
+,442.145833=171.288678
+,693.911458=137.000000
+;
+#OFFSET:-1.102368;
+</code></pre>
+<p>Now, go into the .sm file of your chart, delete the #OFFSET line and also all the lines from #BPMS until the next line starting with a #. Then paste in the content of <code>sync-values-output.txt</code>. With this you’ve successfully replaced the sync values. Reload your editor to see the changes.</p>
+<p>Now as to how the labeling actually works.</p>
+<h1 id="types-of-markers">Types of markers</h1>
+<p>In Audacity there are point labels and region labels (I’ll call them markers from now on). Markers in Audacity contain a text, which can be blank too. My tool interprets the markers in different ways depending on their type and text.</p>
+<p>All markers except the BPM-change pinpointing marker <strong>need to be exactly aligned to the beat. Be careful that you have accurate alignment, or the resulting BPM values will be off.</strong> At the bottom of this document I will explain how to align your markers to kick drum hits perfectly.</p>
+<h2 id="bpm-determination-marker">BPM determination marker</h2>
+<p>This is the most useful type of marker. It spans a certain number of beats and contains the exact number of beats in the marker text.<br>
+<img src="https://imgur.com/9Nso91N.png" alt="BPM determination marker example"><br>
+Just one of these is enough to calculate the offset and BPM for a song, given that it has a constant BPM. Where you place this marker is irrelevant to the syncing. Just find a spot where it’s easy for you to discern the drum hits, and make this marker as long as possible for the most precise BPM measurement.</p>
+<h2 id="boundary-marker">Boundary marker</h2>
+<p>A blank point marker will instruct the program to calculate a BPM change at that point. If it follows a BPM determination marker, it will also adjust BPM “drifting” issues (you should know what that is if you ever needed to determine a weird BPM like 154.687 or something like that). The program will adjust the previous BPM to align perfectly with the boundary marker.</p>
+<p>Example of this behavior:<br>
+<img src="https://imgur.com/ukJJV9u.png" alt="">The BPM determination marker (left) is 34 beats long, which makes it pretty precise already. At the right I’ve inserted a boundary marker, which will slightly adjust the BPM from the determination marker on the left, so that it will be <em>perfectly</em> on-sync with the boundary marker.</p>
+<p>A boundary marker can be used for another purpose:<br>
+<img src="https://imgur.com/lewjjsR.png" alt="Example of a boundary marker being used to model a BPM slope"><br>
+A boundary marker can also be used to model continually changing BPMs, such as in live music or in BPM slopes (see example above). In such situations, place boundary markers at every beat, or every second beat or so. For each boundary marker there will be a BPM calculated, so that all the beats align well even though their BPM is changing all the time.</p>
+<p>Be aware that you need to have a dummy marker at the end of such a section, as in the picture above.</p>
+<h2 id="bpm-change-pinpointing">BPM-change pinpointing</h2>
+<p>Some songs change their BPM mid-song. The program provides a way to pinpoint the exact time where those BPM changes occur. To do that, find the song region in which the BPM change must be happening somewhere. Create a blank region marker there. The program will scan that region to find the BPM change’s exact position.<br>
+<img src="https://imgur.com/pGBwW4Q.png" alt="">In this example I’ve used BPM determination markers to find the BPMs of the first and second part. In the middle you see a blank region marker - this instructs the program to pinpoint where the BPM step-up happens.</p>
+<h2 id="bpm-markers">BPM markers</h2>
+<p>In cases where you already know the exact BPM of a song, simply create a beat-aligned marker somewhere with the BPM as the text.<br>
+<img src="https://imgur.com/O5pyttb.png" alt=""></p>
+<h1 id="how-to-align">How to align</h1>
+<p>For best results you need to align your markers perfectly to beat boundaries. Many EDM songs conveniently have kick drum hits placed on every beat - let’s use those :)</p>
+<p>The secret to pinpointing kick drum hits is zooming in. So let’s do that, step for step.<br>
+<strong>Zoom level 1</strong><br>
+<img src="https://imgur.com/LkMcXpf.png" alt="">This a song in its entire beauty. Starting at approximately 1:01 the drop starts where the kick drum is most prominent.<br>
+<strong>Zoom level 2</strong><br>
+<img src="https://imgur.com/hDZUylB.png" alt="">This is the first 20 seconds of the drop. You can already make out the kick drums. Let’s zoom in on one of the kick drums.<br>
+<strong>Zoom level 3</strong><br>
+<img src="https://imgur.com/fwpRXQx.png" alt="">One singular kick drum. It’s characterized by a sharp spike in volume (1) and then a sound wave with rapidly decreasing frequency (2). We’re interested in the sharp spike because that’s where we will place our markers.<br>
+<strong>Zoom level 4</strong><br>
+<img src="https://imgur.com/wuB8nqs.png" alt="">This is the initial volume spike of the kick drum, really far zoomed in. It’s easy to tell where exactly the kick drum begins in this specific song - but be prepared to hit more difficult cases in other songs. It’s almost always possible to discern the kick drum hit though.<br>
+<strong>Zoom level 5</strong><br>
+<img src="https://imgur.com/MGzIvse.png" alt=""><br>
+Now we’ve arrived at the microscopic level where we can see the individual data points the audio file is made out of. I would place my marker at the position of the cursor in the screenshot above.</p>
+<p>Don’t feel pressured to zoom in as far as I like to do. As long as you’re not a perfectionist like me, it’s totally sufficient to stop and place your marker at zoom level 4. If you’re in a really big hurry, you might even get away with zoom level 3.</p>
+<h2 id="questions">Questions</h2>
+<p>For any questions or ambiguities in this guide - I know there will be some, because I’m a programmer and not a writer - don’t hesitate to tell me on the Discord (I’m on the Etterna Discord, username “kangalioo”). I would love to clarify this guide, or maybe even add new features to the program.</p>
+</div>
+</body>
+
+</html>

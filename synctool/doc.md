@@ -1,0 +1,1 @@
+/home/kangalioo/dev/python/etterna-sync-helper/README.md
