@@ -19,13 +19,13 @@ function calc_intervals(snap) {
 }
 
 function gen_short_interval_str(intervals) {
-    function shorten(src) {
+    function shorten(src, ext_cycle_len) {
         var dst = [];
         
         var prev;
         var count = 1;
         var i = 0;
-        var extend_string = false;
+        var ext_cycle_i = 0;
         while (i < src.length) {
             prev = src[i];
             i += 1;
@@ -41,12 +41,7 @@ function gen_short_interval_str(intervals) {
                     text += "[" + count + "]";
                 }
                 
-                if (extend_string) {
-                    dst[dst.length - 1] += "-" + text
-                } else {
-                    dst.push(text)
-                }
-                extend_string = !extend_string;
+                dst.push(text)
                 
                 count = 1;
             }
@@ -55,9 +50,39 @@ function gen_short_interval_str(intervals) {
         return dst;
     }
     
+    function collapse(src, cycle_len) {
+        var dst = [];
+        
+        var cycle_i = 0;
+        for (var i = 0; i < src.length; i++) {
+            if (cycle_i == 0) {
+                dst.push(src[i]);
+            } else {
+                dst[dst.length - 1] += "-" + src[i];
+            }
+            cycle_i = (cycle_i + 1) % cycle_len;
+        }
+        
+        return dst;
+    }
+    
     // Two levels deep
     intervals = shorten(intervals);
-    intervals = shorten(intervals);
+    var candidates = [];
+    var best_candidate_i;
+    var best_candidate_length = Infinity;
+    for (var cycle_len of [2, 4, 6, 8, 10, 12, 14, 16]) {
+        var candidate = collapse(intervals, cycle_len);
+        candidate = shorten(candidate);
+        
+        candidates.push(candidate);
+        var length = candidate.join("-").length
+        if (length < best_candidate_length) {
+            best_candidate_i = candidates.length - 1;
+            best_candidate_length = length;
+        }
+    }
+    intervals = candidates[best_candidate_i];
     
     return intervals.join("-");
 }
