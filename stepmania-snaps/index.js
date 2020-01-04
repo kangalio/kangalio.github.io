@@ -1,5 +1,6 @@
 window.snaps = undefined;
 window.bpm_column_enabled = true;
+window.separator = " ";
 
 function calc_intervals(snap) {
 	var lengths = [];
@@ -19,72 +20,85 @@ function calc_intervals(snap) {
 }
 
 function gen_short_interval_str(intervals) {
-    function shorten(src, ext_cycle_len) {
-        var dst = [];
+    if (intervals.length == 1) return "" + intervals[0];
+    
+    function merge_runs(data) {
+        var [a, b] = new Set(data);
+        dst = "";
+        for (var s of data) {
+            if (s == a) dst += "A";
+            else if (s == b) dst += "B";
+            else console.log(":(");
+        }
+        dst = dst.replace(/BA/g, "B_A")
+                 .replace(/A/g, a)
+                 .replace(/B/g, b)
+                 .split("_");
+        return dst;
+    }
+    
+    var data = intervals;
+    for (var i = 0; i < data.length; i++) data[i] += window.separator;
+    
+    while (true) {
+        merged = merge_runs(data);
+        if (merged.length == 1) break;
+        data = merged;
+    }
+    
+    var output = "";
+    var i = 0;
+    var count = 1;
+    while (i < data.length) {
+        var prev = data[i];
+        i += 1;
         
-        var prev;
-        var count = 1;
-        var i = 0;
-        var ext_cycle_i = 0;
-        while (i < src.length) {
-            prev = src[i];
-            i += 1;
+        if (data[i] == prev) {
+            count += 1;
+        } else {
+            var is_singular = prev.slice(0, -1).indexOf(window.separator) == -1;
             
-            if (src[i] === prev) {
-                count += 1;
+            if (is_singular && count <= 3) {
+                output += prev.repeat(count);
+            } else if (count == 1) {
+                output += prev;
             } else {
-                var text = "" + prev;
-                if (count > 1) {
-                    if (text.split("-").length > 1) {
-                        text = "(" + text + ")";
-                    }
-                    text += "[" + count + "]";
+                var base = prev.slice(0, -1);
+                if (!is_singular) {
+                    base = "(" + base + ")";
                 }
-                
-                dst.push(text)
-                
-                count = 1;
+                output += base + "x" + count + window.separator;
             }
+            
+            count = 1;
         }
-        
-        return dst;
     }
+    output = output.slice(0, -1);
     
-    function collapse(src, cycle_len) {
-        var dst = [];
+    var parts = output.split(window.separator);
+    var output = "";
+    var i = 0;
+    var count = 1;
+    while (i < parts.length) {
+        var prev = parts[i];
+        i += 1;
         
-        var cycle_i = 0;
-        for (var i = 0; i < src.length; i++) {
-            if (cycle_i == 0) {
-                dst.push(src[i]);
+        if (parts[i] == prev) {
+            count += 1;
+        } else {
+            if (count >= 8) {
+                output += prev + "x" + count + window.separator;
             } else {
-                dst[dst.length - 1] += "-" + src[i];
+                output += (prev + window.separator).repeat(count);
             }
-            cycle_i = (cycle_i + 1) % cycle_len;
-        }
-        
-        return dst;
-    }
-    
-    // Two levels deep
-    intervals = shorten(intervals);
-    var candidates = [];
-    var best_candidate_i;
-    var best_candidate_length = Infinity;
-    for (var cycle_len of [2, 4, 6, 8, 10, 12, 14, 16]) {
-        var candidate = collapse(intervals, cycle_len);
-        candidate = shorten(candidate);
-        
-        candidates.push(candidate);
-        var length = candidate.join("-").length
-        if (length < best_candidate_length) {
-            best_candidate_i = candidates.length - 1;
-            best_candidate_length = length;
+            
+            count = 1;
         }
     }
-    intervals = candidates[best_candidate_i];
+    output = output.slice(0, -1);
     
-    return intervals.join("-");
+    
+    return output;
 }
 
 function refill_table() {
@@ -104,7 +118,7 @@ function refill_table() {
         if (shorten) {
             spacings_str = gen_short_interval_str(intervals);
         } else {
-            spacings_str = intervals.join("-\u200B");
+            spacings_str = intervals.join(window.separator);
         }
 		var bpm = Math.round(target_bpm * snap / 16);
 		

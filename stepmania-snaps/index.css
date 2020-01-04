@@ -83,3 +83,7 @@ td, th {
 .hidden {
   display: none;
 }
+
+#table td:nth-child(2) {
+  word-break: break-word;
+}
