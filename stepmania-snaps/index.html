@@ -2,7 +2,7 @@
   <header>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
     <link rel="stylesheet" href="index.css">
     <script src="index.js"></script>
@@ -33,13 +33,18 @@
                  oninput="this.previousElementSibling.innerHTML = this.value"
                  onchange="refill_table()"/>
         </div>
-        <form onsubmit="append_snap(); return false;">
-          Append custom snap:
+        <form onsubmit="append_snap(); return false;" style="margin-bottom:0">
+          Append custom snap (press enter):
           <input class="setting" id="snap-input"
-                 type="number" step="any"
-                 style="width: 5em; max-height: 2em;"
+                 type="number" step=0.01
                  title="Press enter to append"/>
         </form>
+        <div>
+          Shorten spacing sequences
+          <input id="shorten" class="setting"
+                 type="checkbox"
+                 onchange="refill_table()"/>
+        </div>
       </div>
       
       <span class="small-header">Credit:</span>

@@ -54,7 +54,22 @@ td, th {
   display: inline-block;
   margin-left: 10px;
   float: right;
+  max-height: 100%;
   height: 1.5em;
+}
+
+.first-col-cell input {
+  height: 1.25em;
+  display: none;
+}
+
+.first-col-cell:hover input {
+  display: initial;
+}
+
+#snap-input {
+  width: 5em;
+  max-height: 2em;
 }
 
 #target-bpm {
