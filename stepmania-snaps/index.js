@@ -1,6 +1,7 @@
 window.snaps = undefined;
 window.bpm_column_enabled = true;
 window.separator = " ";
+window.export_file = null;
 
 function calc_intervals(snap) {
 	var lengths = [];
@@ -169,6 +170,32 @@ function hide_row(snap) {
     var index = window.snaps.indexOf(snap)
     window.snaps.splice(index, 1);
     refill_table();
+}
+
+function collect_data() {
+    var text = "";
+    
+    let table = document.getElementsByTagName("table")[0];
+    for (let row of table.rows) {
+        let snap = row.cells[0].childNodes[0].nodeValue;
+        let spacings = row.cells[1].childNodes[0].nodeValue;
+        text += snap + "ths: " + spacings + "\n";
+    }
+    
+    return text;
+}
+
+function gen_export_link() {
+    let link = document.getElementById("export-link");
+    
+    let blob = new Blob([collect_data()], {type: "text/plain"});
+    if (window.export_file !== null) {
+        window.URL.revokeObjectURL(window.export_file);
+    }
+    window.export_file = window.URL.createObjectURL(blob);
+    
+    link.href = window.export_file;
+    link.style.display = "inline-block";
 }
 
 function setup() {

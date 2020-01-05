@@ -47,6 +47,12 @@
         </div>
       </div>
       
+      <span class="small-header">Export:</span>
+      <div>
+        <button onclick="gen_export_link()">Generate text file of table data</button>
+        <a id="export-link" download="snaps.txt">Download</a>
+      </div>
+      
       <span class="small-header">Credit:</span>
       <div>
         This was made by kangalioo. Thanks to leo137 for the original
@@ -79,6 +85,7 @@
     <script>
       setup();
       refill_table();
+      console.log(collect_data()); // REMEMBER
     </script>
   </body>
 </html>

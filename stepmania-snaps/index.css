@@ -34,6 +34,23 @@ p:first-of-type {
   margin-top: 0px;
 }
 
+button {
+  background-color: #fff;
+  box-shadow: 0 0 8px #ddd;
+  border: 2px solid #cbcbcb;
+  text-align: center;
+  display: inline-block;
+  font-size: 100%;
+}
+
+button:hover {
+  background-color: #eee;
+}
+
+#export-link {
+  display: none;
+}
+
 .slider-value {
   font-weight: bold;
 }
