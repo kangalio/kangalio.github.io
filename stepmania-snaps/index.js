@@ -103,6 +103,10 @@ function gen_short_interval_str(intervals) {
 }
 
 function refill_table() {
+    // Now that the table is be updated, the export link will be
+    // outdated, so we hide it
+    document.getElementById("export-link").style.display = "none";
+    
     var max_length = document.getElementById("max-length").value;
     var target_bpm = document.getElementById("target-bpm").value;
     var shorten = document.getElementById("shorten").checked;
@@ -176,10 +180,25 @@ function collect_data() {
     var text = "";
     
     let table = document.getElementsByTagName("table")[0];
+    var i = -1;
     for (let row of table.rows) {
+        i += 1;
+        if (i == 0) continue;
+        
         let snap = row.cells[0].childNodes[0].nodeValue;
         let spacings = row.cells[1].childNodes[0].nodeValue;
-        text += snap + "ths: " + spacings + "\n";
+        
+        var line = snap + "ths:";
+        let indent = " ".repeat(line.length);
+        for (let spacing of spacings.split(window.separator)) {
+            let addendum = " " + spacing;
+            if ((line + addendum).length > 100) {
+                text += "\n" + line;
+                line = indent;
+            }
+            line += addendum;
+        }
+        text += "\n" + line;
     }
     
     return text;

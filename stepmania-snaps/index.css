@@ -35,8 +35,7 @@ p:first-of-type {
 }
 
 button {
-  background-color: #fff;
-  box-shadow: 0 0 8px #ddd;
+  background-color: #f8f8f8;
   border: 2px solid #cbcbcb;
   text-align: center;
   display: inline-block;
