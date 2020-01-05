@@ -19,9 +19,28 @@ function calc_intervals(snap) {
     return lengths;
 }
 
+// Similar to Python's itertools.groupby function
+function* groupby(data) {
+    var i = 0;
+    var count = 1;
+    while (i < data.length) {
+        var prev = data[i];
+        i += 1;
+        
+        if (data[i] === prev) {
+            count += 1;
+        } else {
+            yield [prev, count];
+            
+            count = 1;
+        }
+    }
+}
+
 function gen_short_interval_str(intervals) {
     if (intervals.length == 1) return "" + intervals[0];
     
+    // Iterates the given list and merges runs of same value
     function merge_runs(data) {
         var [a, b] = new Set(data);
         dst = "";
@@ -37,68 +56,49 @@ function gen_short_interval_str(intervals) {
         return dst;
     }
     
-    var data = intervals;
-    for (var i = 0; i < data.length; i++) data[i] += window.separator;
-    
-    while (true) {
-        merged = merge_runs(data);
-        if (merged.length == 1) break;
-        data = merged;
-    }
-    
-    var output = "";
-    var i = 0;
-    var count = 1;
-    while (i < data.length) {
-        var prev = data[i];
-        i += 1;
-        
-        if (data[i] == prev) {
-            count += 1;
-        } else {
-            var is_singular = prev.slice(0, -1).indexOf(window.separator) == -1;
+    // Collapses runs of same value into the form <value>x<count>
+    // similar to "1 1 1 2 2 2 2 1" -> "1x3 2x4 1"
+    // (but a little more involved, with paranthesis and stuff)
+    function collapse(data) {
+        var output = "";
+        for ([key, count] of groupby(data)) {
+            let is_singular = key.slice(0, -1).indexOf(window.separator) == -1;
             
-            if (is_singular && count <= 3) {
-                output += prev.repeat(count);
+            if (is_singular && count <= 6) {
+                output += key.repeat(count);
             } else if (count == 1) {
-                output += prev;
+                output += key;
             } else {
-                var base = prev.slice(0, -1);
+                let base = key.slice(0, -1);
                 if (!is_singular) {
                     base = "(" + base + ")";
                 }
                 output += base + "x" + count + window.separator;
             }
-            
-            count = 1;
         }
+        output = output.slice(0, -1);
+        return output;
     }
-    output = output.slice(0, -1);
     
-    var parts = output.split(window.separator);
-    var output = "";
-    var i = 0;
-    var count = 1;
-    while (i < parts.length) {
-        var prev = parts[i];
-        i += 1;
+    var data = intervals;
+    for (var i in data) data[i] += window.separator;
+    
+    // Repeatedly merge runs, going deeper and deeper. In the end, the
+    // best merge candidate is returned based on the length of the
+    // resulting string
+    var best_candidate = collapse(data);
+    while (true) {
+        merged = merge_runs(data);
+        if (merged.length == 1) break;
+        data = merged;
         
-        if (parts[i] == prev) {
-            count += 1;
-        } else {
-            if (count >= 8) {
-                output += prev + "x" + count + window.separator;
-            } else {
-                output += (prev + window.separator).repeat(count);
-            }
-            
-            count = 1;
+        let collapsed = collapse(data);
+        if (best_candidate === null || collapsed.length < best_candidate.length) {
+            best_candidate = collapsed;
         }
     }
-    output = output.slice(0, -1);
     
-    
-    return output;
+    return best_candidate;
 }
 
 function refill_table() {
