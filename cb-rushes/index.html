@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>index.html</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="what-are-cb-rushes">What are CB rushes</h1>
+<p>When you accidentally insert an extra tap, Etterna thinks you meant to hit the upcoming note. This creates an early hit and also offsets all further taps on this column. This creates a stream of bad judgements.</p>
+<p>Here’s an illustration (oriented downscroll: bottom to top):</p>
+<img src="cbrush-explanation.png" height="500px">
+<h1 id="how-does-the-bot-detect-them">How does the bot detect them</h1>
+<p>Actually the bot doesn’t <em>detect</em> CB rushes per se. Instead, it gathers the raw hit data and runs it through a different hit system than the Stepmania/Etterna one. This new hit system is designed to not be susceptible to CB rushes in the first place.</p>
+
+<table>
+<thead>
+<tr>
+<th>Default hit system</th>
+<th>Modified hit system</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>When you tap a key, the nearest note that hasn’t been already judged will be used as the tap’s associated note</td>
+<td>Key taps will be mapped to the notes in a best-match fashion. If you hit a stray tap, but afterwards get a more precise hit on the same note, instead of choosing the upcoming note as the associated note, this hit system will just throw out the old associated hit and count it as a miss.</td>
+</tr>
+</tbody>
+</table><h1 id="why-is-the-score-sometimes-lower-without-cb-rushes">Why is the score sometimes lower <em>without</em> CB rushes?</h1>
+<ol>
+<li>Due to the fact that the “no CB rushes” score is created using a whole different hit system, there’s bound to be some discrepancies.</li>
+<li>Etterna’s replay file format discards all taps that are not associated to any notes (ghost taps).<br>
+This is usually fine, <strong>but</strong> in a CB rush, the last tap will not have an associated note - see in the graphic above, the uppermost red dot doesn’t have a green line coming from it. This means that in a CB rush, Etterna discards the last hit. That makes for a miss in the bot’s modified hit system.<br>
+Due to this fact, a CB rush situation in the modified hit system is sometimes <em>more punished</em> (two misses) than in the default hit system (multiple goods and bads).</li>
+</ol>
+</div>
+</body>
+
+</html>
