@@ -20,86 +20,193 @@ function calc_intervals(snap) {
     return lengths;
 }
 
-// Similar to Python's itertools.groupby function
-function* groupby(data) {
-    var i = 0;
-    var count = 1;
-    while (i < data.length) {
-        var prev = data[i];
-        i += 1;
-        
-        if (data[i] === prev) {
-            count += 1;
-        } else {
-            yield [prev, count];
-            
-            count = 1;
-        }
+
+// stores a compression of a sequence
+class compr {
+    constructor(start_a = 0, end_a = 0,
+        start_b = 0, end_b = 0,
+        repeated = false, count = 0) 
+    {
+        this.start_a = start_a;
+        this.end_a = end_a;
+        this.start_b = start_b;
+        this.end_b = end_b;
+
+        this.repeated = repeated;
+        this.count = count;
     }
 }
 
-function gen_short_interval_str(intervals) {
-    if (intervals.length == 1) return "" + intervals[0];
-    
-    // Iterates the given list and merges runs of same value
-    function merge_runs(data) {
-        var [a, b] = new Set(data);
-        dst = "";
-        for (var s of data) {
-            if (s == a) dst += "A";
-            else if (s == b) dst += "B";
-            else console.log(":(");
-        }
-        dst = dst.replace(/BA/g, "B_A")
-                 .replace(/A/g, a)
-                 .replace(/B/g, b)
-                 .split("_");
-        return dst;
+function digit_count(i) {
+    return i.toString().length;
+}
+
+// gets the run length encoding of a sequence
+function run_length_enc(start, end, s){
+    if(start === end){
+        return s[start].toString();
     }
+
+    let str = s[start].toString();
+    let count = 1;
+    for (let i = start + 1; i <= end; i++) {
+        if (s[i] == s[i - 1]) {
+            count++;
+        }
+        else {
+            if (count > 1) {
+                str += 'x' + count.toString();
+                count = 1;
+            }
+            str += ' ' + s[i].toString();
+        }
+    }
+
+    if(count > 1){
+        str += 'x' + count.toString();
+    }
+
+    return str;
+}
+
+// if a sequence is a repetition, returns length of repetition
+// otherwise returns 0
+function repeating_length(start, end, s) {
+    let len = end - start + 1;
+    let prefix = [];
+    for (let i = 0; i < len; i++) {
+        prefix.push(0);
+    }
+
+    for (let i = 1; i < len; i++) {
+        let j = prefix[i - 1];
+        while (j > 0 && s[start + i] !== s[start + j]) {
+            j = prefix[j - 1];
+        }
+        if (s[start + i] == s[start + j]) {
+            j++;
+        }
+        prefix[i] = j;
+    }
+
+    if (len % (len - prefix[len - 1]) || !prefix[len - 1]) {
+        return 0;
+    }
+    else {
+        return len - prefix[len - 1];
+    }
+}
+
+// finds compressions for all subsequences of s
+function compress(s) {
     
-    // Collapses runs of same value into the form <value>x<count>
-    // similar to "1 1 1 2 2 2 2 1" -> "1x3 2x4 1"
-    // (but a little more involved, with paranthesis and stuff)
-    function collapse(data) {
-        var output = "";
-        for ([key, count] of groupby(data)) {
-            let is_singular = key.slice(0, -1).indexOf(window.separator) == -1;
-            
-            if (is_singular && count <= 6) {
-                output += key.repeat(count);
-            } else if (count == 1) {
-                output += key;
-            } else {
-                let base = key.slice(0, -1);
-                if (!is_singular) {
-                    base = "(" + base + ")";
+    let weights = new Array(s.length);
+    let forms = new Array(s.length);
+
+    // initialization
+    for (let i = 0; i < s.length; i++) {
+        weights[i] = [new Array(s.length)];
+        for(let j = 0; j < s.length; j++){
+            weights[i][j] = Number.MAX_SAFE_INTEGER;
+        }
+
+        forms[i] = new Array(s.length);
+    }
+
+    // goes through all possible subsequences
+    for (let len = 1; len <= s.length; len++) {
+        for (let i = 0; i < s.length - len + 1; i++) {
+            let j = i + len - 1;
+            // the subsequence is i to j (inclusive)
+
+            // if it's a single number, we just use it
+            if(i == j){
+                weights[i][j] = digit_count(s[i]);
+                forms[i][j] = new compr(i, j);
+
+                if(j != s.length - 1){
+                    weights[i][j]++;
                 }
-                output += base + "x" + count + window.separator;
+                continue;
+            }
+
+            // the current sequence might be a concatenation of two shorter ones,
+            // so this goes through all of them and finds the smallest one
+            for(let split = i + 1; split <= j; split++){
+                let split_val = weights[i][split - 1] + weights[split][j];
+                if(weights[i][j] > split_val){
+                    weights[i][j] = split_val;
+                    forms[i][j] = new compr(i, split - 1, split, j);
+                }
+            }
+
+            // the current sequence might be a repetition, so we check if
+            // the repetition is shorter than the concatenation found earlier
+            let rep_length = repeating_length(i, j, s);
+            if(rep_length > 0){
+                let rep_end = i + rep_length - 1;
+                let single_w = run_length_enc(i, rep_end, s).length;
+                let count = len / rep_length;
+
+                let rep_weight = 1 + single_w + digit_count(count);
+                if(rep_length > 1){
+                    rep_weight += 2;
+                }
+                if(j == s.length - 1){
+                    rep_weight--;
+                }
+                if(weights[i][j] > rep_weight){
+                    weights[i][j] = rep_weight;
+                    forms[i][j] = new compr(i, rep_end, 0, 0, true, count);
+                }
             }
         }
-        output = output.slice(0, -1);
-        return output;
     }
-    
-    var data = intervals;
-    for (var i in data) data[i] += window.separator;
-    
-    // Repeatedly merge runs, going deeper and deeper. In the end, the
-    // best merge candidate is returned based on the length of the
-    // resulting string
-    var best_candidate = collapse(data);
-    while (true) {
-        merged = merge_runs(data);
-        if (merged.length == 1) break;
-        data = merged;
-        
-        let collapsed = collapse(data);
-        if (best_candidate === null || collapsed.length < best_candidate.length) {
-            best_candidate = collapsed;
+
+    return forms;
+}
+
+// recursively forms a compressed string of the sequence
+function form_string(start, end, forms, s){
+    let form = forms[start][end];
+
+    if(start == end){
+        return s[start].toString();
+    }
+
+    let str = "";
+    // if it's a repeating sequence, we either
+    // print it with the repetition count, or
+    // unfold it if it's nested
+    if(form.repeated){
+        let str_rep = run_length_enc(form.start_a, form.end_a, s);
+        let rep_len = form.end_a - form.start_a + 1;
+
+        // makes the string (A...)xN
+        if(rep_len > 1){
+            str += '(';
         }
+        str += str_rep;
+        if(rep_len > 1){
+            str += ')';
+        }
+        str += 'x' + form.count.toString();
+        
     }
-    
-    return best_candidate;
+    // otherwise, we just concatenate the two smaller sequences
+    else {
+        let str_a = form_string(form.start_a, form.end_a, forms, s);
+        let str_b = form_string(form.start_b, form.end_b, forms, s);
+        str = str_a + " " + str_b;
+    }
+
+    return str;
+}
+
+// wrapper function for compressing a sequence of intervals
+function gen_short_interval_str(intervals){
+	let forms = compress(intervals);
+  return form_string(0, intervals.length - 1, forms, intervals, false);
 }
 
 function refill_table() {
