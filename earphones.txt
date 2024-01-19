@@ -1,8 +1,12 @@
-Panasonic RP-HJE125E-K (7.99€)
-JBL Tune 110 (9.99€)
-Moondrop Quarks (14.99€)
-Moondrop CHU II (18.99€)
-SoundMAGIC E11C (43.99€)
+Hi, I recently spent a couple hours scouring wired earphone <50€ reviews in the internet and bought and tested the five models that came up the most:
+
+- Panasonic RP-HJE125E-K (7.99€)
+- JBL Tune 110 (9.99€)
+- Moondrop Quarks (14.99€)
+- Moondrop CHU II (18.99€)
+- SoundMAGIC E11C (43.99€)
+
+Here's my opinion/judgment:
 
 Panasonic:
 + easily and snugly slots into ear canal
@@ -18,6 +22,7 @@ JBL Tune 110:
 
 Moondrop Quarks:
 + has volume/playback control buttons
++ has a mic (didnt test it tho)
 - silicone caps very frustrating to put on
 - weak bass
 
@@ -33,3 +38,5 @@ SoundMAGIC E11C:
 + has volume/playback control buttons
 + has a good sounding mic (slightly more muffled than JBL Tune 110 according to friend)
 + playback audio doesnt bleed into mic audio at all
+
+In the end, I went with the JBL Tunes 110 because they have damn satisfying bass, and the mic and buttons are convenient, and they're just 10€
