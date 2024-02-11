@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @font-face {
+        font-family: HankenGrotesk;
+        src: url("/results-summary-component/assets/fonts/HankenGrotesk-VariableFont_wght.ttf");
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        background-color: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        background-color: white;
+        border-radius: 30px;
+
+        font-family: HankenGrotesk;
+        font-size: 20px;
+      }
+      #left-card {
+        /* Dimensions */
+        width: 368px;
+        height: 512px;
+        border-radius: 30px;
+
+        /* Inner layout */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        gap: 35px;
+
+        /* Inner style */
+        background-image: linear-gradient(#6743ff, #312cea);
+        color: #fff;
+      }
+      #your-result {
+        color: #bbb;
+      }
+      #points-bubble {
+        /* Dimensions */
+        width: 200px;
+        height: 200px;
+        border-radius: 100px;
+
+        /* Inner layout */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        /* Inner style */
+        background-color: #472cde;
+      }
+      #points-bubble .large {
+        font-size: 70px;
+        font-weight: bold;
+      }
+      #points-bubble .small {
+        color: #bbb;
+      }
+      #text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #great {
+        margin-bottom: 10px;
+
+        font-weight: bold;
+        font-size: 31px;
+      }
+      #description {
+        width: 80%;
+        color: #aaa;
+      }
+
+      #right-card {
+        width: 368px;
+        height: 512px;
+        padding-left: 40px;
+        padding-right: 40px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+      #skills {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      #skills > * {
+        width: 288px;
+        height: 56px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 16px;
+        padding-right: 16px;
+        gap: 10px;
+
+        background-color: hsl(var(--skill-hue) 100% 95%);
+        border-radius: 10px;
+      }
+      #skills .name {
+        color: hsl(var(--skill-hue) 100% 30%);
+      }
+      #skills .score {
+        margin-left: auto;
+        font-weight: bold;
+      }
+      #skills .out-of-100 {
+        color: #888;
+      }
+      .reaction {
+        --skill-hue: 6;
+      }
+      .memory {
+        --skill-hue: 42;
+      }
+      .verbal {
+        --skill-hue: 173;
+      }
+      .visual {
+        --skill-hue: 240;
+      }
+
+      #continue {
+        border: none;
+        background-color: #346;
+        color: #fff;
+        width: 100%;
+        height: 56px;
+        border-radius: 27px;
+        font-size: 20px;
+      }
+      #continue:hover {
+        background-color: #457;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="left-card">
+      <span id="your-result">Your Result</span>
+      <div id="points-bubble">
+        <span class="large">76</span>
+        <span class="small">of 100</span>
+      </div>
+      <div id="text">
+        <h1 id="great">Great</h1>
+        <span id="description"
+          >You scored higher than 65% of the people who have taken these
+          tests.</span
+        >
+      </div>
+    </div>
+    <div id="right-card">
+      <h1>Summary</h1>
+      <div id="skills">
+        <div class="reaction">
+          <img
+            src="/results-summary-component/assets/images/icon-reaction.svg"
+          />
+          <span class="name">Reaction</span>
+          <span class="score">80</span>
+          <span class="out-of-100"> / 100</span>
+        </div>
+        <div class="memory">
+          <img src="/results-summary-component/assets/images/icon-memory.svg" />
+          <span class="name">Memory</span>
+          <span class="score">92</span>
+          <span class="out-of-100"> / 100</span>
+        </div>
+        <div class="verbal">
+          <img src="/results-summary-component/assets/images/icon-verbal.svg" />
+          <span class="name">Verbal</span>
+          <span class="score">61</span>
+          <span class="out-of-100"> / 100</span>
+        </div>
+        <div class="visual">
+          <img src="/results-summary-component/assets/images/icon-visual.svg" />
+          <span class="name">Visual</span>
+          <span class="score">72</span>
+          <span class="out-of-100"> / 100</span>
+        </div>
+      </div>
+      <button id="continue">Continue</button>
+    </div>
+  </body>
+</html>
