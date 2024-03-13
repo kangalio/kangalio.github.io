@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<body>
+<p>
+    Der Songtext eines Familienfestklassikers:
+</p>
+<pre>
+    Wenn ich aus der Kneipe geh,
+    tut mir der Zeh so weh
+    Und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir die Hacke weh
+    Und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    ...
+</pre>
+<p>
+    Dieses Muster setzt sich fort mit "Wade macht Balade" (alternativ "malade"), "Knie macht Pippi", "Schenkel macht Spirenkel", "Bauch, dieser Schlauch", "Brust, voller Lust", "Hals, voller Schmalz" bis zu "Kopf, dieser Tropf". Beliebig erweiterbar, versteht sich.
+</p>
+<p>
+    Der vollständige Text lautet also:
+</p>
+<!--
+a = ["der Zeh so", "die Hacke", "die Wade", "das Knie so", "der Schenkel", "der Kopf so", "der Hals so", "die Brust so", "der Bauch so", "die Brust so", "der Hals so", "der Kopf so"]
+b = ["der Zeh tut mir weh", "die Hacke macht Attacke", "die Wade macht malade", "das Knie macht Pippi", "der Schenkel macht Spirenkel", "der Bauch, dieser Schlauch", "die Brust, voller Lust", "der Hals, voller Schmalz", "der Kopf, dieser Tropf"]
+
+for i in range(len(a)):
+    print(f"Wenn ich aus der Kneipe geh,")
+    print(f"tut mir {a[i]} weh")
+    first = True
+    for b2 in reversed(b[:i+1]):
+        print(f"Und {b2}," if first else f"und {b2},")
+        first = False
+    print("wenn ich aus der Kneipe geh")
+    print()
+-->
+<pre>
+    Wenn ich aus der Kneipe geh,
+    tut mir der Zeh so weh
+    Und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir die Hacke weh
+    Und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir die Wade weh
+    Und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir das Knie so weh
+    Und das Knie macht Pippi,
+    und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir der Schenkel weh
+    Und der Schenkel macht Spirenkel,
+    und das Knie macht Pippi,
+    und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir der Kopf so weh
+    Und der Bauch, dieser Schlauch,
+    und der Schenkel macht Spirenkel,
+    und das Knie macht Pippi,
+    und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir der Hals so weh
+    Und die Brust, voller Lust,
+    und der Bauch, dieser Schlauch,
+    und der Schenkel macht Spirenkel,
+    und das Knie macht Pippi,
+    und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir die Brust so weh
+    Und der Hals, voller Schmalz,
+    und die Brust, voller Lust,
+    und der Bauch, dieser Schlauch,
+    und der Schenkel macht Spirenkel,
+    und das Knie macht Pippi,
+    und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir der Bauch so weh
+    Und der Kopf, dieser Tropf,
+    und der Hals, voller Schmalz,
+    und die Brust, voller Lust,
+    und der Bauch, dieser Schlauch,
+    und der Schenkel macht Spirenkel,
+    und das Knie macht Pippi,
+    und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir die Brust so weh
+    Und der Kopf, dieser Tropf,
+    und der Hals, voller Schmalz,
+    und die Brust, voller Lust,
+    und der Bauch, dieser Schlauch,
+    und der Schenkel macht Spirenkel,
+    und das Knie macht Pippi,
+    und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir der Hals so weh
+    Und der Kopf, dieser Tropf,
+    und der Hals, voller Schmalz,
+    und die Brust, voller Lust,
+    und der Bauch, dieser Schlauch,
+    und der Schenkel macht Spirenkel,
+    und das Knie macht Pippi,
+    und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+
+    Wenn ich aus der Kneipe geh,
+    tut mir der Kopf so weh
+    Und der Kopf, dieser Tropf,
+    und der Hals, voller Schmalz,
+    und die Brust, voller Lust,
+    und der Bauch, dieser Schlauch,
+    und der Schenkel macht Spirenkel,
+    und das Knie macht Pippi,
+    und die Wade macht malade,
+    und die Hacke macht Attacke,
+    und der Zeh tut mir weh,
+    wenn ich aus der Kneipe geh
+</pre>
+</body>
