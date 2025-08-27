@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wiedersehen</title>
+
+    <!-- Google Fonts for a nice, clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- Basic Setup --- */
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-content: center; /* Modern way to center content */
+        font-family: "Inter", sans-serif;
+        text-align: center;
+        color: #1f2937;
+      }
+
+      /* --- Timer Styling --- */
+      .timer-grid {
+        display: flex;
+        gap: clamp(1rem, 5vw, 3rem); /* Fluid gap based on viewport width */
+      }
+
+      .timer-unit {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Styling for the large numbers and the final "expired" header */
+      #expired-message h1,
+      .timer-grid span[id] {
+        font-family: "Roboto Mono", monospace;
+        font-weight: 700;
+        line-height: 1;
+        /* Fluid font size: min 3rem, preferred 18% of viewport width, max 6rem */
+        font-size: clamp(3rem, 18vw, 6rem);
+      }
+
+      /* Styling for the small labels under the numbers */
+      .timer-grid .label {
+        /* Fluid font size: min 0.75rem, preferred 3% of viewport width, max 1rem */
+        font-size: clamp(0.75rem, 3vw, 1rem);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 0.25rem;
+        color: #6b7280;
+      }
+
+      /* Styling for the subtitle and the final "expired" paragraph */
+      #expired-message p,
+      .subtitle {
+        margin-top: 2rem;
+        font-size: 1.125rem;
+        color: #4b5563;
+      }
+
+      /* --- Utility Class --- */
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- This container holds the active countdown timer -->
+      <div id="timer-container">
+        <div class="timer-grid">
+          <div class="timer-unit hours">
+            <span id="hours">00</span>
+            <span class="label">Hours</span>
+          </div>
+          <div class="timer-unit minutes">
+            <span id="minutes">00</span>
+            <span class="label">Minutes</span>
+          </div>
+          <div class="timer-unit seconds">
+            <span id="seconds">00</span>
+            <span class="label">Seconds</span>
+          </div>
+        </div>
+        <p class="subtitle">❤️</p>
+      </div>
+
+      <!-- This container is hidden by default and shows when the timer expires -->
+      <div id="expired-message" class="hidden">
+        <h1>😊</h1>
+      </div>
+    </main>
+
+    <script>
+      // --- IMPORTANT: SET YOUR TARGET DATE AND TIME HERE ---
+      // The format is "YYYY-MM-DDTHH:MM:SS".
+      // CEST is Central European Summer Time (UTC+2), so we add "+02:00" at the end to specify the timezone.
+      // I've set it for August 29, 2025 as an example. Please change '2025-08-29' to the correct date.
+      const targetDateString = "2025-08-29T21:28:00+02:00";
+      const countDownDate = new Date(targetDateString).getTime();
+
+      // Get the HTML elements we need to update
+      const hoursEl = document.getElementById("hours");
+      const minutesEl = document.getElementById("minutes");
+      const secondsEl = document.getElementById("seconds");
+      const timerContainer = document.getElementById("timer-container");
+      const expiredMessage = document.getElementById("expired-message");
+      let interval;
+
+      function updateCountdown() {
+        // Get today's date and time
+        const now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        const distance = countDownDate - now;
+
+        // If the count down is finished, show the expired message
+        if (distance < 0) {
+          clearInterval(interval);
+          timerContainer.style.display = "none";
+          expiredMessage.classList.remove("hidden");
+          return;
+        }
+
+        // Time calculations for total hours, minutes and seconds
+        const hours = Math.floor(distance / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display the result in the elements, adding a "0" if the number is less than 10
+        hoursEl.innerText = String(hours).padStart(2, "0");
+        minutesEl.innerText = String(minutes).padStart(2, "0");
+        secondsEl.innerText = String(seconds).padStart(2, "0");
+      }
+
+      // Update the countdown every second
+      updateCountdown();
+      interval = setInterval(updateCountdown, 1000); // Run this function every 1000ms (1 second)
+    </script>
+  </body>
+</html>
